@@ -11,3 +11,8 @@ export async function getUser(name: string) {
     const result = await db.select().from(users).where((sql`${users.name} = ${name}`));
     return result;
 }
+
+export async function getUsers() {
+    const result = (await db.select({ name: users.name }).from(users)).map(row => row.name);
+    return result;
+}

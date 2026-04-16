@@ -1,5 +1,6 @@
 import { register } from "node:module";
-import { CommandHandler, handlerLogin, handlerRegister } from "./commandHandler";
+import { addFeedHandler, aggHandler, CommandHandler, handleGetUsers, handlerLogin, handlerRegister } from "./commandHandler";
+import { resetDb } from "./lib/db/queries/reset";
 
 type CommandsRegistry=Record<string, CommandHandler>;
 
@@ -17,5 +18,9 @@ export async function runCommand(registry: CommandsRegistry, cmdName: string, ..
 
 export const commandsRegistry: CommandsRegistry = {
     login: handlerLogin,
-    register: handlerRegister
+    register: handlerRegister,
+    reset: resetDb,
+    users: handleGetUsers,
+    agg: aggHandler,
+    addfeed: addFeedHandler
 };

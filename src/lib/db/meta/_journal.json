@@ -8,6 +8,13 @@
       "when": 1776303264943,
       "tag": "0000_fearless_red_hulk",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1776324927803,
+      "tag": "0001_lumpy_korg",
+      "breakpoints": true
     }
   ]
 }
