@@ -49,7 +49,7 @@ function writeConfig(config: Config): void {
 
 }
 
-export function readConfig(): Config | undefined {
+export function readConfig(): Config {
     try {
         const data = fs.readFileSync(getConfigFilePath(), 'utf-8');
         if (validateConfig(JSON.parse(data))) {
@@ -64,6 +64,10 @@ export function readConfig(): Config | undefined {
         }
     } catch (err) {
         console.error('Error reading from file:', err);
-        throw err;
+        return {
+            dbUrl: "",
+            currentUserName: "",
+        } satisfies Config;
+
     }
 }
