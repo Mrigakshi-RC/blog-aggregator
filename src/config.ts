@@ -42,7 +42,6 @@ function writeConfig(config: Config): void {
     };
     try {
         fs.writeFileSync(getConfigFilePath(), JSON.stringify(jsonContent), 'utf-8');
-        console.log('File written successfully!');
     } catch (err) {
         console.error('Error writing to file:', err);
     }

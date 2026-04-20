@@ -1,8 +1,9 @@
 import { register } from "node:module";
-import { addFeedHandler, aggHandler, CommandHandler, followHandler, getFeedsHandler, getFollowingHandler, handleGetUsers, handlerLogin, handlerRegister } from "./commandHandler";
+import { addFeedHandler, aggHandler, CommandHandler, followHandler, getFeedsHandler, getFollowingHandler, handleGetUsers, handlerLogin, handlerRegister, unfollowHandler } from "./commandHandler";
 import { resetDb } from "./lib/db/queries/reset";
 import { feeds } from "./lib/db/schema";
 import { get } from "node:http";
+import { withUser } from "./middleware";
 
 type CommandsRegistry=Record<string, CommandHandler>;
 
@@ -24,8 +25,9 @@ export const commandsRegistry: CommandsRegistry = {
     reset: resetDb,
     users: handleGetUsers,
     agg: aggHandler,
-    addfeed: addFeedHandler,
+    addfeed: withUser(addFeedHandler),
     feeds: getFeedsHandler,
-    follow: followHandler,
-    following: getFollowingHandler
+    follow: withUser(followHandler),
+    following: withUser(getFollowingHandler),
+    unfollow: withUser(unfollowHandler)
 };
