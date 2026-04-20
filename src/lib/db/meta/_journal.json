@@ -15,6 +15,20 @@
       "when": 1776324927803,
       "tag": "0001_lumpy_korg",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1776651312972,
+      "tag": "0002_yielding_iceman",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1776651670357,
+      "tag": "0003_glossy_strong_guy",
+      "breakpoints": true
     }
   ]
 }

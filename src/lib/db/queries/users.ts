@@ -16,3 +16,8 @@ export async function getUsers() {
     const result = (await db.select({ name: users.name }).from(users)).map(row => row.name);
     return result;
 }
+
+export async function getUsernameById(id: string) {
+    const result = await db.select().from(users).where((sql`${users.id} = ${id}`));
+    return result[0]?.name;
+}

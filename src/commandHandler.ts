@@ -1,8 +1,9 @@
 import { readConfig, setUser } from "./config";
-import { createUser, getUser, getUsers } from "./lib/db/queries/users";
+import { createUser, getUser, getUsernameById, getUsers } from "./lib/db/queries/users";
 import { resetDb } from "./lib/db/queries/reset";
 import { fetchFeed, printFeed } from "./utils";
-import { addFeed } from "./lib/db/queries/feeds";
+import { addFeed, getFeedByUrl, getFeeds } from "./lib/db/queries/feeds";
+import { createFeedFollow, getFeedFollowsForUser } from "./lib/db/queries/feed_follow";
 
 export type CommandHandler = (cmdName: string, ...args: string[]) => Promise<void>;
 
@@ -56,6 +57,37 @@ export async function addFeedHandler(cmdName: string, ...args: string[]) {
     const name = args[0];
     const url = args[1];
     const feed = await addFeed(name, url);
-    const user = await (getUser(readConfig().currentUserName ?? ''));
-    printFeed(feed, user[0]);
+    const user = (await (getUser(readConfig().currentUserName ?? '')))[0];
+
+    console.log({url})
+    await createFeedFollow(url);
+    printFeed(feed, user);
+}
+
+export async function getFeedsHandler(cmdName: string, ...args: string[]) {
+    const feeds = await getFeeds();
+    const enrichedFeeds = await Promise.all(feeds.map(async (feed) => {
+        const user = await getUsernameById(feed.userId);
+        return { name: feed.name, url: feed.url, createdBy: user };
+    }));
+
+    console.log(enrichedFeeds);
+};
+
+export async function followHandler(cmdName: string, ...args: string[]) {
+    if (args.length < 1) {
+        console.log("Usage: follow <feed-name>");
+        process.exit(1);
+    }
+    await createFeedFollow(args[0]);
+    const feedName = await getFeedByUrl(args[0]).then(feed => feed.name);
+    const currentUserName = readConfig().currentUserName;
+    console.log(`${currentUserName} is now following ${feedName}`);
+}
+
+export async function getFollowingHandler(cmdName: string, ...args: string[]) {
+    const currentUserName = readConfig().currentUserName;
+    const user = await getUser(currentUserName ?? '');
+    const followingFeeds = await getFeedFollowsForUser(user[0].id);
+    followingFeeds.forEach(feed => console.log(`* ${feed.feedName}`));
 }
