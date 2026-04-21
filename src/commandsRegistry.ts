@@ -1,5 +1,5 @@
 import { register } from "node:module";
-import { addFeedHandler, aggHandler, CommandHandler, followHandler, getFeedsHandler, getFollowingHandler, handleGetUsers, handlerLogin, handlerRegister, unfollowHandler } from "./commandHandler";
+import { addFeedHandler, aggHandler, browseHandler, CommandHandler, followHandler, getFeedsHandler, getFollowingHandler, handleGetUsers, handlerLogin, handlerRegister, unfollowHandler } from "./commandHandler";
 import { resetDb } from "./lib/db/queries/reset";
 import { feeds } from "./lib/db/schema";
 import { get } from "node:http";
@@ -29,5 +29,6 @@ export const commandsRegistry: CommandsRegistry = {
     feeds: getFeedsHandler,
     follow: withUser(followHandler),
     following: withUser(getFollowingHandler),
-    unfollow: withUser(unfollowHandler)
+    unfollow: withUser(unfollowHandler),
+    browse: withUser(browseHandler)
 };

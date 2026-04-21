@@ -1,9 +1,10 @@
 import { readConfig, setUser } from "./config";
 import { createUser, getUser, getUsernameById, getUsers } from "./lib/db/queries/users";
 import { resetDb } from "./lib/db/queries/reset";
-import { fetchFeed, printFeed, User } from "./utils";
+import { fetchFeed, handleError, parseDurationToMs, printFeed, scrapeFeeds, User } from "./utils";
 import { addFeed, getFeedByUrl, getFeeds } from "./lib/db/queries/feeds";
 import { createFeedFollow, deleteFeedFollow, getFeedFollowsForUser } from "./lib/db/queries/feed_follow";
+import { getPostsForUser } from "./lib/db/queries/posts";
 
 export type CommandHandler = (cmdName: string, ...args: string[]) => Promise<void>;
 
@@ -45,8 +46,25 @@ export async function handleGetUsers(cmdName: string, ...args: string[]) {
 }
 
 export async function aggHandler(cmdName: string, ...args: string[]) {
-    const result = await fetchFeed("https://www.wagslane.dev/index.xml");
-    console.log(result);
+    if (!args.length) {
+        console.log("Usage: agg <time_between_reqs>");
+        process.exit(1);
+    }
+    const timeBetweenRequests = parseDurationToMs(args[0]);
+    console.log(`Collecting feeds every ${args[0]}`);
+    scrapeFeeds().catch(handleError);
+
+    const interval = setInterval(() => {
+        scrapeFeeds().catch(handleError);
+    }, timeBetweenRequests);
+    await new Promise<void>((resolve) => {
+        process.on("SIGINT", () => {
+            console.log("Shutting down feed aggregator...");
+            clearInterval(interval);
+            resolve();
+        });
+    });
+
 }
 
 export async function addFeedHandler(cmdName: string, user: User, ...args: string[]) {
@@ -89,4 +107,10 @@ export async function getFollowingHandler(cmdName: string, user: User, ...args: 
 
 export async function unfollowHandler(cmdName: string, user: User, ...args: string[]) {
     await deleteFeedFollow(user.id, args[0]);
+}
+
+export async function browseHandler(cmdName: string, user: User, ...args: string[]) {
+    const limit = args.length > 0 ? parseInt(args[0]) ?? 2 : 2;
+    const posts = await getPostsForUser(user.id);
+    console.log(posts.slice(0, limit))
 }

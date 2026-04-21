@@ -29,6 +29,20 @@
       "when": 1776651670357,
       "tag": "0003_glossy_strong_guy",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1776736053978,
+      "tag": "0004_lame_yellowjacket",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1776747418067,
+      "tag": "0005_zippy_kronos",
+      "breakpoints": true
     }
   ]
 }
