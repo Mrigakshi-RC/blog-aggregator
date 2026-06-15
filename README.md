@@ -1,6 +1,6 @@
 # Blog Aggregator CLI
 
-A powerful command-line interface (CLI) tool written in Go that allows you to aggregate RSS feeds, manage user subscriptions, and follow your favorite blogs directly from your terminal.
+A powerful command-line interface (CLI) tool that allows you to aggregate RSS feeds, manage user subscriptions, and follow your favorite blogs directly from your terminal.
 
 ## Prerequisites
 
